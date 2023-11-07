@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, validator
 
 
 class Contact(BaseModel):
@@ -59,7 +59,7 @@ class ShipmentCreateRequest(BaseModel):
     delivery: PickupDeliveryInfo
     shipping_date: str
 
-    @field_validator("shipping_date", mode="before")
+    @validator("shipping_date", pre=True)
     def validate_shipping_date(cls, value):
         if isinstance(value, date):
             return value.isoformat()
