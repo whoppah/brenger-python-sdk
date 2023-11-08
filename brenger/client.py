@@ -41,7 +41,9 @@ class BrengerAPIClient:
             logger.error("Server Error")
             raise APIServerError("Internal Server Error")
         elif response.status_code >= 400:
-            error_message = response.json().get("description", "An error occurred")
+            error_description = response.json().get("description", "An error occurred")
+            error_hint = response.json().get("hint", "Hint not provided")
+            error_message = f"Error description: {error_description} Error hint: {error_hint} Status code: {response.status_code}"
             logger.error(f"Client Error: {error_message}")
             raise APIClientError(f"Client Error: {error_message}")
         response.raise_for_status()
