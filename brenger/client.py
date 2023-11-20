@@ -41,9 +41,16 @@ class BrengerAPIClient:
             logger.error("Server Error")
             raise APIServerError("Internal Server Error")
         elif response.status_code >= 400:
-            error_description = response.json().get("description", "An error occurred")
-            error_hint = response.json().get("hint", "Hint not provided")
-            error_message = f"Error description: {error_description} Error hint: {error_hint} Status code: {response.status_code}"
+            response_json = response.json()
+            error_description = response_json.get("description", "An error occurred")
+            error_hint = response_json.get("hint", "Hint not provided")
+            error_validation = response_json.get("validation_errors", "Validation not provided")
+            error_message = (
+                f" Status code: {response.status_code} - "
+                f"Error description: {error_description} -"
+                f" Error hint: {error_hint} - "
+                f" validation errors: {error_validation}"
+            )
             logger.error(f"Client Error: {error_message}")
             raise APIClientError(f"Client Error: {error_message}")
         response.raise_for_status()
