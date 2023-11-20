@@ -1,7 +1,13 @@
 from datetime import date
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, field_validator
+
+
+def strip_whitespace(cls, value: Any):
+    if isinstance(value, str):
+        return value.rstrip()
+    return value
 
 
 class Contact(BaseModel):
@@ -9,6 +15,10 @@ class Contact(BaseModel):
     last_name: str
     email: str
     phone: str
+
+    _strip_whitespace = field_validator(
+        "first_name", "last_name", "email", "phone", mode="before"
+    )(strip_whitespace)
 
 
 class Address(BaseModel):
@@ -21,6 +31,10 @@ class Address(BaseModel):
     country_code: str
     lat: Optional[float] = None
     lng: Optional[float] = None
+
+    _strip_whitespace = field_validator(
+        "line1", "line2", "postal_code", "locality", mode="before"
+    )(strip_whitespace)
 
 
 class Details(BaseModel):
@@ -44,6 +58,7 @@ class Item(BaseModel):
     width: int
     count: int
     weight: Optional[int] = None
+    _strip_whitespace = field_validator("title", mode="before")(strip_whitespace)
 
 
 class ItemSet(BaseModel):
@@ -51,6 +66,10 @@ class ItemSet(BaseModel):
     items: List[Item]
     description: Optional[str] = None
     client_reference: Optional[str] = None
+
+    _strip_whitespace = field_validator("title", "description", mode="before")(
+        strip_whitespace
+    )
 
 
 class ShipmentCreateRequest(BaseModel):

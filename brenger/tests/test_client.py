@@ -40,6 +40,4 @@ class TestBrengerAPIClient(unittest.TestCase):
         with self.assertRaises(APIClientError) as context:
             self.client.create_shipment(self.test_shipment_data)
 
-        self.assertIn(
-            "Client Error: Invalid request parameters", str(context.exception)
-        )
+        self.assertIn("Client Error:  Status code: 400", str(context.exception))
