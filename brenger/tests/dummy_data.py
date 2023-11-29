@@ -1,18 +1,8 @@
 from datetime import date
 
-from brenger.models import (
-    Address,
-    Contact,
-    Details,
-    Item,
-    ItemSet,
-    PickupDeliveryInfo,
-    Price,
-    ShipmentCreateRequest,
-    ShipmentResponse,
-    ShippingLabel,
-    TimeWindow,
-)
+from brenger.models import (Address, Contact, Details, Item, ItemSet,
+                            PickupDeliveryInfo, Price, ShipmentCreateRequest,
+                            ShipmentResponse, ShippingLabel, TimeWindow)
 
 pickup_contact = Contact(
     first_name="John", last_name="Doe", email="johndoe@example.com", phone="0612345678"

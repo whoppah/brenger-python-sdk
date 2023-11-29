@@ -22,7 +22,9 @@ class BrengerAPIClient:
 
     def create_shipment(self, shipment_data: ShipmentCreateRequest) -> ShipmentResponse:
         url = BASE_URL.format(namespace=self.namespace) + "/shipments"
-        response = self.session.post(url, data=shipment_data.model_dump_json().encode("utf-8"))
+        response = self.session.post(
+            url, data=shipment_data.model_dump_json().encode("utf-8")
+        )
         self._handle_response_errors(response)
         logger.info(
             "Shipment created successfully with ID: %s", response.json().get("id")
@@ -44,7 +46,9 @@ class BrengerAPIClient:
             response_json = response.json()
             error_description = response_json.get("description", "An error occurred")
             error_hint = response_json.get("hint", "Hint not provided")
-            error_validation = response_json.get("validation_errors", "Validation not provided")
+            error_validation = response_json.get(
+                "validation_errors", "Validation not provided"
+            )
             error_message = (
                 f" Status code: {response.status_code} - "
                 f"Error description: {error_description} -"

@@ -1,10 +1,15 @@
 from datetime import date
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, validator, field_validator
+from pydantic import BaseModel, field_validator, validator
 
 
 def strip_whitespace(cls, value: Any):
+    """
+    Brenger API is failing if strings are ends with emtpy space lol.
+
+    Strip whitespace from string fields.
+    """
     if isinstance(value, str):
         return value.rstrip()
     return value
@@ -19,6 +24,17 @@ class Contact(BaseModel):
     _strip_whitespace = field_validator(
         "first_name", "last_name", "email", "phone", mode="before"
     )(strip_whitespace)
+
+    @field_validator("first_name", "last_name")
+    def check_name_length(cls, value):
+        """
+        Brenger API has validation for first name and last name to be min 3 characters.
+
+        Validation makes sure that if the length of the name is less than 3, it is padded with dots.
+        """
+        if len(value) < 3:
+            value += "." * (4 - len(value))
+        return value
 
 
 class Address(BaseModel):
