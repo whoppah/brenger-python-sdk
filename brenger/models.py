@@ -25,8 +25,9 @@ class Contact(BaseModel):
         "first_name", "last_name", "email", "phone", mode="before"
     )(strip_whitespace)
 
-    @field_validator("first_name", "last_name")
-    def check_name_length(cls, value):
+    @field_validator("first_name", "last_name", mode="before")
+    @classmethod
+    def check_name_length(cls, value: str) -> str:
         """
         Brenger API has validation for first name and last name to be min 3 characters.
 
