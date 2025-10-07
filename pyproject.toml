@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "brenger"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["Omer <omer@whoppah.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pydantic = "2.4.2"
+pydantic = ">=2.5.3"
 black = "<23.3.0"
 requests = "^2.31.0"
 isort = "^5.12.0"
