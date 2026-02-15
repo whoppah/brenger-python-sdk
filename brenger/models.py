@@ -184,7 +184,7 @@ class V2Stop(BaseModel):
 
 class V2Item(BaseModel):
     title: str
-    category: str = "other"
+    category: str
     images: Optional[List[str]] = None
     width: int
     height: int
@@ -212,9 +212,13 @@ class V2Feasible(BaseModel):
     reasons: List[str]
 
 
+class V2AddressWrapper(BaseModel):
+    address: V2Address
+
+
 class V2QuoteRequest(BaseModel):
-    pickup: Dict
-    delivery: Dict
+    pickup: V2AddressWrapper
+    delivery: V2AddressWrapper
     external_reference: Optional[str] = None
     items: List[V2Item]
 
@@ -222,8 +226,8 @@ class V2QuoteRequest(BaseModel):
 class V2QuoteResponse(BaseModel):
     price: V2Price
     feasible: V2Feasible
-    pickup: Dict
-    delivery: Dict
+    pickup: V2AddressWrapper
+    delivery: V2AddressWrapper
     external_reference: Optional[str] = None
     items: List[V2Item]
 
@@ -238,7 +242,7 @@ class V2ShipmentCreateRequest(BaseModel):
     external_listing_url: Optional[str] = None
     external_private_url: Optional[str] = None
     items: List[V2Item]
-    price: Optional[V2Price] = None
+    price: V2Price
 
 
 class V2ShipmentCreateResponse(BaseModel):
