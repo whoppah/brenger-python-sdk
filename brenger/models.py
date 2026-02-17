@@ -159,8 +159,8 @@ class V2Address(BaseModel):
     postal_code: str
     line1: str
     line2: Optional[str] = None
-    lat: Optional[float] = None
-    lng: Optional[float] = None
+    lat: float
+    lng: float
 
     _strip_whitespace = field_validator(
         "line1", "line2", "postal_code", "locality", mode="before"
