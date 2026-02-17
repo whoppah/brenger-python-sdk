@@ -145,3 +145,151 @@ class ShipmentResponse(BaseModel):
 
     class Config:
         extra = "ignore"
+
+
+# ============================================================================
+# V2 API Models
+# ============================================================================
+
+
+class V2Address(BaseModel):
+    country: str
+    administrative_area: Optional[str] = None
+    locality: str
+    postal_code: str
+    line1: str
+    line2: Optional[str] = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+
+    _strip_whitespace = field_validator(
+        "line1", "line2", "postal_code", "locality", mode="before"
+    )(strip_whitespace)
+
+
+class V2Stop(BaseModel):
+    email: str
+    phone_number: Optional[str] = None
+    instructions: Optional[str] = None
+    first_name: str
+    last_name: Optional[str] = None
+    company_name: Optional[str] = None
+    preferred_locale: Optional[str] = None
+    address: V2Address
+
+    _strip_whitespace = field_validator(
+        "email", "first_name", "last_name", "company_name", mode="before"
+    )(strip_whitespace)
+
+
+class V2Item(BaseModel):
+    title: str
+    category: str
+    images: Optional[List[str]] = None
+    width: int
+    height: int
+    length: int
+    count: int
+
+    _strip_whitespace = field_validator("title", "category", mode="before")(
+        strip_whitespace
+    )
+
+
+class V2Amount(BaseModel):
+    currency: str
+    value: str
+
+
+class V2Price(BaseModel):
+    vat: V2Amount
+    incl_vat: V2Amount
+    excl_vat: V2Amount
+
+
+class V2Feasible(BaseModel):
+    value: bool
+    reasons: List[str]
+
+
+class V2AddressWrapper(BaseModel):
+    address: V2Address
+
+
+class V2QuoteRequest(BaseModel):
+    pickup: V2AddressWrapper
+    delivery: V2AddressWrapper
+    external_reference: Optional[str] = None
+    items: List[V2Item]
+
+
+class V2QuoteResponse(BaseModel):
+    price: V2Price
+    feasible: V2Feasible
+    pickup: V2AddressWrapper
+    delivery: V2AddressWrapper
+    external_reference: Optional[str] = None
+    items: List[V2Item]
+
+    class Config:
+        extra = "ignore"
+
+
+class V2ShipmentCreateRequest(BaseModel):
+    pickup: V2Stop
+    delivery: V2Stop
+    external_reference: str
+    external_listing_url: Optional[str] = None
+    external_private_url: Optional[str] = None
+    items: List[V2Item]
+    price: V2Price
+
+
+class V2ShipmentCreateResponse(BaseModel):
+    shipment_id: str
+    pickup: V2Stop
+    delivery: V2Stop
+    pickup_url: str
+    delivery_url: str
+    shipment_url: str
+    external_reference: str
+    external_listing_url: Optional[str] = None
+    external_private_url: Optional[str] = None
+    items: List[V2Item]
+    price: V2Price
+
+    class Config:
+        extra = "ignore"
+
+
+class V2Event(BaseModel):
+    id: str
+    timestamp: str
+    status: str
+
+
+class V2StatusResponse(BaseModel):
+    shipment_id: str
+    external_reference: str
+    status: str
+    events: List[V2Event]
+
+    class Config:
+        extra = "ignore"
+
+
+class V2RefundResponse(BaseModel):
+    refund_id: str
+    amount: V2Price
+    code: str
+
+    class Config:
+        extra = "ignore"
+
+
+class V2WebhookPayload(BaseModel):
+    event_id: str
+    shipment_id: str
+    external_reference: str
+    timestamp: str
+    status: str
